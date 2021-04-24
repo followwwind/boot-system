@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wind.boot.dao.PaperIssueMapper" >
+    <resultMap id="BaseResultMap" type="com.wind.boot.entity.po.PaperIssue" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="paper_id" property="paperId" jdbcType="INTEGER" />
+        <result column="issue_id" property="issueId" jdbcType="INTEGER" />
+    </resultMap>
+
+
+    <sql id="Column_List" >
+        id,paper_id,issue_id
+    </sql>
+
+    <sql id="Column_Selective_List" >
+        <trim prefix="" suffix="" suffixOverrides="," prefixOverrides=",">
+			<if test="id!= null" >
+				, id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="paperId!= null" >
+				, paper_id = #{paperId,jdbcType=INTEGER}
+			</if>
+			<if test="issueId!= null" >
+				, issue_id = #{issueId,jdbcType=INTEGER}
+			</if>
+		</trim>
+    </sql>
+
+    <sql id="Column_Selective_And_List" >
+        <if test="id!= null" >
+			and id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="paperId!= null" >
+			and paper_id = #{paperId,jdbcType=INTEGER}
+		</if>
+		<if test="issueId!= null" >
+			and issue_id = #{issueId,jdbcType=INTEGER}
+		</if>
+		
+    </sql>
+
+    <sql id="Column_Assign_List" >
+        #{id,jdbcType=INTEGER},#{paperId,jdbcType=INTEGER},#{issueId,jdbcType=INTEGER}
+    </sql>
+
+    <sql id="InsertBatch_List" >
+        #{item.id,jdbcType=INTEGER},#{item.paperId,jdbcType=INTEGER},#{item.issueId,jdbcType=INTEGER}
+    </sql>
+
+    <insert id="insert" parameterType="com.wind.boot.entity.po.PaperIssue" useGeneratedKeys="true" keyProperty="id">
+        insert into paper_issue (
+        <include refid="Column_List" />
+        ) values (
+        <include refid="Column_Assign_List" />
+        )
+    </insert>
+
+    <!--<insert id="insertBatch" >-->
+    <!--insert into paper_issue (-->
+    <!--<include refid="Column_List" />-->
+    <!--) values-->
+    <!--<foreach collection="list" item="item" separator=",">-->
+    <!--(-->
+    <!--<include refid="InsertBatch_List" />-->
+    <!--)-->
+    <!--</foreach>-->
+    <!--</insert>-->
+
+    <delete id="deleteById">
+        delete from paper_issue where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <select id="findById" resultType="com.wind.boot.entity.vo.PaperIssueVO">
+        select
+        r.id,r.paper_id paperId,r.issue_id issueId
+        from paper_issue r
+        where r.id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="update" parameterType="com.wind.boot.entity.po.PaperIssue" >
+        update paper_issue
+        <set>
+            <include refid="Column_Selective_List" />
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="delete" parameterType="com.wind.boot.entity.po.PaperIssue" >
+        delete from paper_issue where
+        <include refid="Column_Selective_And_List" />
+    </delete>
+
+    <select id="list" resultType="com.wind.boot.entity.vo.PaperIssueVO" parameterType="com.wind.boot.entity.dto.PaperIssueSearchDTO">
+        select
+        r.id,r.paper_id paperId,r.issue_id issueId
+        from paper_issue r
+        where 1 = 1
+        <if test="id!= null" >
+			and r.id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="paperId!= null" >
+			and r.paper_id = #{paperId,jdbcType=INTEGER}
+		</if>
+		<if test="issueId!= null" >
+			and r.issue_id = #{issueId,jdbcType=INTEGER}
+		</if>
+		
+    </select>
+</mapper>
+

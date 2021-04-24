@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wind.boot.dao.IssueMapper" >
+    <resultMap id="BaseResultMap" type="com.wind.boot.entity.po.Issue" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="answer" property="answer" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+
+    <sql id="Column_List" >
+        id,content,answer,create_time
+    </sql>
+
+    <sql id="Column_Selective_List" >
+        <trim prefix="" suffix="" suffixOverrides="," prefixOverrides=",">
+			<if test="id!= null" >
+				, id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="content!= null and content!=''" >
+				, content = #{content,jdbcType=VARCHAR}
+			</if>
+			<if test="answer!= null and answer!=''" >
+				, answer = #{answer,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime!= null" >
+				, create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+		</trim>
+    </sql>
+
+    <sql id="Column_Selective_And_List" >
+        <if test="id!= null" >
+			and id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="content!= null and content!=''" >
+			and content = #{content,jdbcType=VARCHAR}
+		</if>
+		<if test="answer!= null and answer!=''" >
+			and answer = #{answer,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime!= null" >
+			and create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		
+    </sql>
+
+    <sql id="Column_Assign_List" >
+        #{id,jdbcType=INTEGER},#{content,jdbcType=VARCHAR},#{answer,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}
+    </sql>
+
+    <sql id="InsertBatch_List" >
+        #{item.id,jdbcType=INTEGER},#{item.content,jdbcType=VARCHAR},#{item.answer,jdbcType=VARCHAR},#{item.createTime,jdbcType=TIMESTAMP}
+    </sql>
+
+    <insert id="insert" parameterType="com.wind.boot.entity.po.Issue" useGeneratedKeys="true" keyProperty="id">
+        insert into issue (
+        <include refid="Column_List" />
+        ) values (
+        <include refid="Column_Assign_List" />
+        )
+    </insert>
+
+    <!--<insert id="insertBatch" >-->
+    <!--insert into issue (-->
+    <!--<include refid="Column_List" />-->
+    <!--) values-->
+    <!--<foreach collection="list" item="item" separator=",">-->
+    <!--(-->
+    <!--<include refid="InsertBatch_List" />-->
+    <!--)-->
+    <!--</foreach>-->
+    <!--</insert>-->
+
+    <delete id="deleteById">
+        delete from issue where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <select id="findById" resultType="com.wind.boot.entity.vo.IssueVO">
+        select
+        r.id,r.content,r.answer,r.create_time createTime
+        from issue r
+        where r.id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="update" parameterType="com.wind.boot.entity.po.Issue" >
+        update issue
+        <set>
+            <include refid="Column_Selective_List" />
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="delete" parameterType="com.wind.boot.entity.po.Issue" >
+        delete from issue where
+        <include refid="Column_Selective_And_List" />
+    </delete>
+
+    <select id="list" resultType="com.wind.boot.entity.vo.IssueVO" parameterType="com.wind.boot.entity.dto.IssueSearchDTO">
+        select
+        r.id,r.content,r.answer,r.create_time createTime
+        from issue r
+        where 1 = 1
+        <if test="id!= null" >
+			and r.id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="content!= null and content!=''" >
+			and r.content like concat('%', #{content,jdbcType=VARCHAR}, '%')
+		</if>
+		<if test="answer!= null and answer!=''" >
+			and r.answer like concat('%', #{answer,jdbcType=VARCHAR}, '%')
+		</if>
+		<if test="createTime!= null" >
+			and r.create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		
+    </select>
+</mapper>
+
